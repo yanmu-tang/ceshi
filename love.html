@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>潇潇的图片站</title>
+
+    <style>
+
+*{
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: none;
+	box-sizing: border-box;
+}
+*:before,
+*:after{
+	box-sizing: border-box;
+}
+html,
+body{
+	min-height: 100%;
+}
+body{
+	background-color: #bfa;
+}
+h1{
+	display: table;
+	margin: 5% auto 0;
+	text-transform: uppercase;
+	font-family: 'Anaheim', sans-serif;
+	font-size: 4em;
+	font-weight: 400;
+	text-shadow: 0 1px white, 0 2px black;
+}
+.container{
+	margin: 4% auto;
+	width: 210px;
+	height: 140px;
+	position: relative;
+	perspective: 1000;
+}
+#carousel{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	transform-style: preserve-3d;
+	animation: run 22s infinite linear;
+}
+#carousel:hover{
+	animation-play-state: paused;
+}
+#carousel figure{
+	
+	width: 280px;
+    height: 400px;
+    position: fixed;
+    left: 0;
+    right: 0;
+    top:0;
+    bottom: 0;
+    margin: 200px auto;
+}
+img{
+            width: 250px;
+            height: 350px;
+            border: 5px solid #ccc;
+            border-radius: 5px;
+            position: absolute;
+            left: 0;
+            top: 0;
+}
+#carousel figure:nth-child(1){transform: rotateY(0deg) translateZ(500px);}
+#carousel figure:nth-child(2) { transform: rotateY(36deg) translateZ(500px);}
+#carousel figure:nth-child(3) { transform: rotateY(72deg) translateZ(500px);}
+#carousel figure:nth-child(4) { transform: rotateY(108deg) translateZ(500px);}
+#carousel figure:nth-child(5) { transform: rotateY(144deg) translateZ(500px);}
+#carousel figure:nth-child(6) { transform: rotateY(180deg) translateZ(500px);}
+#carousel figure:nth-child(7) { transform: rotateY(216deg) translateZ(500px);}
+#carousel figure:nth-child(8) { transform: rotateY(252deg) translateZ(500px);}
+#carousel figure:nth-child(9) { transform: rotateY(288deg) translateZ(500px);}
+#carousel figure:nth-child(10) { transform: rotateY(324deg) translateZ(500px);}
+#carousel figure:nth-child(11) { transform: rotateY(360deg) translateZ(500px);}
+
+/* img{
+	-webkit-filter: grayscale(1);
+	cursor: pointer;
+	transition: all .5s ease;
+} */
+img:hover{
+	-webkit-filter: grayscale(0);
+  transform: scale(1.2,1.2);
+}
+
+@keyframes rotation{
+	from{
+		transform: rotateY(0deg);
+	}
+	to{
+		transform: rotateY(360deg);
+	}
+}
+@keyframes run {
+            0%{transform: rotateX(0deg) rotateY(0deg);
+            }
+            25%{transform: rotateX(10deg) rotateY(90deg);
+            }
+            50%{transform: rotateX(0deg) rotateY(180deg);
+            }
+            75%{transform: rotateX(-10deg) rotateY(270deg);
+            }
+            100%{transform: rotateX(0deg) rotateY(360deg);
+            }
+        }
+</style>
+
+  <script>
+	  /**
+ * StyleFix 1.0.3 & PrefixFree 1.0.7
+ * @author Lea Verou
+ * MIT license
+ */
+
+(function(){
+
+if(!window.addEventListener) {
+  return;
+}
+
+var self = window.StyleFix = {
+  link: function(link) {
+    try {
+      // Ignore stylesheets with data-noprefix attribute as well as alternate stylesheets
+      if(link.rel !== 'stylesheet' || link.hasAttribute('data-noprefix')) {
+        return;
+      }
+    }
+    catch(e) {
+      return;
+    }
+
+    var url = link.href || link.getAttribute('data-href'),
+        base = url.replace(/[^\/]+$/, ''),
+        base_scheme = (/^[a-z]{3,10}:/.exec(base) || [''])[0],
+        base_domain = (/^[a-z]{3,10}:\/\/[^\/]+/.exec(base) || [''])[0],
+        base_query = /^([^?]*)\??/.exec(url)[1],
+        parent = link.parentNode,
+        xhr = new XMLHttpRequest(),
+        process;
+
+    xhr.onreadystatechange = function() {
+      if(xhr.readyState === 4) {
+        process();
+      }
+    };
+
+    process = function() {
+        var css = xhr.responseText;
+
+        if(css && link.parentNode && (!xhr.status || xhr.status < 400 || xhr.status > 600)) {
+          css = self.fix(css, true, link);
+
+          // Convert relative URLs to absolute, if needed
+          if(base) {
+            css = css.replace(/url\(\s*?((?:"|')?)(.+?)\1\s*?\)/gi, function($0, quote, url) {
+              if(/^([a-z]{3,10}:|#)/i.test(url)) { // Absolute & or hash-relative
+                return $0;
+              }
+              else if(/^\/\//.test(url)) { // Scheme-relative
+                // May contain sequences like /../ and /./ but those DO work
+                return 'url("' + base_scheme + url + '")';
+              }
+              else if(/^\//.test(url)) { // Domain-relative
+                return 'url("' + base_domain + url + '")';
+              }
+              else if(/^\?/.test(url)) { // Query-relative
+                return 'url("' + base_query + url + '")';
+              }
+              else {
+                // Path-relative
+                return 'url("' + base + url + '")';
+              }
+            });
+
+            // behavior URLs shoudn’t be converted (Issue #19)
+            // base should be escaped before added to RegExp (Issue #81)
+            var escaped_base = base.replace(/([\\\^\$*+[\]?{}.=!:(|)])/g,"\\$1");
+            css = css.replace(RegExp('\\b(behavior:\\s*?url\\(\'?"?)' + escaped_base, 'gi'), '$1');
+            }
+
+          var style = document.createElement('style');
+          style.textContent = css;
+          style.media = link.media;
+          style.disabled = link.disabled;
+          style.setAttribute('data-href', link.getAttribute('href'));
+
+          parent.insertBefore(style, link);
+          parent.removeChild(link);
+
+          style.media = link.media; // Duplicate is intentional. See issue #31
+        }
+    };
+
+    try {
+      xhr.open('GET', url);
+      xhr.send(null);
+    } catch (e) {
+      // Fallback to XDomainRequest if available
+      if (typeof XDomainRequest != "undefined") {
+        xhr = new XDomainRequest();
+        xhr.onerror = xhr.onprogress = function() {};
+        xhr.onload = process;
+        xhr.open("GET", url);
+        xhr.send(null);
+      }
+    }
+
+    link.setAttribute('data-inprogress', '');
+  },
+
+  styleElement: function(style) {
+    if (style.hasAttribute('data-noprefix')) {
+      return;
+    }
+    var disabled = style.disabled;
+
+    style.textContent = self.fix(style.textContent, true, style);
+
+    style.disabled = disabled;
+  },
+
+  styleAttribute: function(element) {
+    var css = element.getAttribute('style');
+
+    css = self.fix(css, false, element);
+
+    element.setAttribute('style', css);
+  },
+
+  process: function() {
+    // Linked stylesheets
+    $('link[rel="stylesheet"]:not([data-inprogress])').forEach(StyleFix.link);
+
+    // Inline stylesheets
+    $('style').forEach(StyleFix.styleElement);
+
+    // Inline styles
+    $('[style]').forEach(StyleFix.styleAttribute);
+  },
+
+  register: function(fixer, index) {
+    (self.fixers = self.fixers || [])
+      .splice(index === undefined? self.fixers.length : index, 0, fixer);
+  },
+
+  fix: function(css, raw, element) {
+    for(var i=0; i<self.fixers.length; i++) {
+      css = self.fixers[i](css, raw, element) || css;
+    }
+
+    return css;
+  },
+
+  camelCase: function(str) {
+    return str.replace(/-([a-z])/g, function($0, $1) { return $1.toUpperCase(); }).replace('-','');
+  },
+
+  deCamelCase: function(str) {
+    return str.replace(/[A-Z]/g, function($0) { return '-' + $0.toLowerCase() });
+  }
+};
+
+/**************************************
+ * Process styles
+ **************************************/
+(function(){
+  setTimeout(function(){
+    $('link[rel="stylesheet"]').forEach(StyleFix.link);
+  }, 10);
+
+  document.addEventListener('DOMContentLoaded', StyleFix.process, false);
+})();
+
+function $(expr, con) {
+  return [].slice.call((con || document).querySelectorAll(expr));
+}
+
+})();
+
+/**
+ * PrefixFree
+ */
+(function(root){
+
+if(!window.StyleFix || !window.getComputedStyle) {
+  return;
+}
+
+// Private helper
+function fix(what, before, after, replacement, css) {
+  what = self[what];
+
+  if(what.length) {
+    var regex = RegExp(before + '(' + what.join('|') + ')' + after, 'gi');
+
+    css = css.replace(regex, replacement);
+  }
+
+  return css;
+}
+
+var self = window.PrefixFree = {
+  prefixCSS: function(css, raw, element) {
+    var prefix = self.prefix;
+
+    // Gradient angles hotfix
+    if(self.functions.indexOf('linear-gradient') > -1) {
+      // Gradients are supported with a prefix, convert angles to legacy
+      css = css.replace(/(\s|:|,)(repeating-)?linear-gradient\(\s*(-?\d*\.?\d*)deg/ig, function ($0, delim, repeating, deg) {
+        return delim + (repeating || '') + 'linear-gradient(' + (90-deg) + 'deg';
+      });
+    }
+
+    css = fix('functions', '(\\s|:|,)', '\\s*\\(', '$1' + prefix + '$2(', css);
+    css = fix('keywords', '(\\s|:)', '(\\s|;|\\}|$)', '$1' + prefix + '$2$3', css);
+    css = fix('properties', '(^|\\{|\\s|;)', '\\s*:', '$1' + prefix + '$2:', css);
+
+    // Prefix properties *inside* values (issue #8)
+    if (self.properties.length) {
+      var regex = RegExp('\\b(' + self.properties.join('|') + ')(?!:)', 'gi');
+
+      css = fix('valueProperties', '\\b', ':(.+?);', function($0) {
+        return $0.replace(regex, prefix + "$1")
+      }, css);
+    }
+
+    if(raw) {
+      css = fix('selectors', '', '\\b', self.prefixSelector, css);
+      css = fix('atrules', '@', '\\b', '@' + prefix + '$1', css);
+    }
+
+    // Fix double prefixing
+    css = css.replace(RegExp('-' + prefix, 'g'), '-');
+
+    // Prefix wildcard
+    css = css.replace(/-\*-(?=[a-z]+)/gi, self.prefix);
+
+    return css;
+  },
+
+  property: function(property) {
+    return (self.properties.indexOf(property)? self.prefix : '') + property;
+  },
+
+  value: function(value, property) {
+    value = fix('functions', '(^|\\s|,)', '\\s*\\(', '$1' + self.prefix + '$2(', value);
+    value = fix('keywords', '(^|\\s)', '(\\s|$)', '$1' + self.prefix + '$2$3', value);
+
+    // TODO properties inside values
+
+    return value;
+  },
+
+  // Warning: Prefixes no matter what, even if the selector is supported prefix-less
+  prefixSelector: function(selector) {
+    return selector.replace(/^:{1,2}/, function($0) { return $0 + self.prefix })
+  },
+
+  // Warning: Prefixes no matter what, even if the property is supported prefix-less
+  prefixProperty: function(property, camelCase) {
+    var prefixed = self.prefix + property;
+
+    return camelCase? StyleFix.camelCase(prefixed) : prefixed;
+  }
+};
+
+/**************************************
+ * Properties
+ **************************************/
+(function() {
+  var prefixes = {},
+    properties = [],
+    shorthands = {},
+    style = getComputedStyle(document.documentElement, null),
+    dummy = document.createElement('div').style;
+
+  // Why are we doing this instead of iterating over properties in a .style object? Cause Webkit won't iterate over those.
+  var iterate = function(property) {
+    if(property.charAt(0) === '-') {
+      properties.push(property);
+
+      var parts = property.split('-'),
+        prefix = parts[1];
+
+      // Count prefix uses
+      prefixes[prefix] = ++prefixes[prefix] || 1;
+
+      // This helps determining shorthands
+      while(parts.length > 3) {
+        parts.pop();
+
+        var shorthand = parts.join('-');
+
+        if(supported(shorthand) && properties.indexOf(shorthand) === -1) {
+          properties.push(shorthand);
+        }
+      }
+    }
+  },
+  supported = function(property) {
+    return StyleFix.camelCase(property) in dummy;
+  }
+
+  // Some browsers have numerical indices for the properties, some don't
+  if(style.length > 0) {
+    for(var i=0; i<style.length; i++) {
+      iterate(style[i])
+    }
+  }
+  else {
+    for(var property in style) {
+      iterate(StyleFix.deCamelCase(property));
+    }
+  }
+
+  // Find most frequently used prefix
+  var highest = {uses:0};
+  for(var prefix in prefixes) {
+    var uses = prefixes[prefix];
+
+    if(highest.uses < uses) {
+      highest = {prefix: prefix, uses: uses};
+    }
+  }
+
+  self.prefix = '-' + highest.prefix + '-';
+  self.Prefix = StyleFix.camelCase(self.prefix);
+
+  self.properties = [];
+
+  // Get properties ONLY supported with a prefix
+  for(var i=0; i<properties.length; i++) {
+    var property = properties[i];
+
+    if(property.indexOf(self.prefix) === 0) { // we might have multiple prefixes, like Opera
+      var unprefixed = property.slice(self.prefix.length);
+
+      if(!supported(unprefixed)) {
+        self.properties.push(unprefixed);
+      }
+    }
+  }
+
+  // IE fix
+  if(self.Prefix == 'Ms'
+    && !('transform' in dummy)
+    && !('MsTransform' in dummy)
+    && ('msTransform' in dummy)) {
+    self.properties.push('transform', 'transform-origin');
+  }
+
+  self.properties.sort();
+})();
+
+/**************************************
+ * Values
+ **************************************/
+(function() {
+// Values that might need prefixing
+var functions = {
+  'linear-gradient': {
+    property: 'backgroundImage',
+    params: 'red, teal'
+  },
+  'calc': {
+    property: 'width',
+    params: '1px + 5%'
+  },
+  'element': {
+    property: 'backgroundImage',
+    params: '#foo'
+  },
+  'cross-fade': {
+    property: 'backgroundImage',
+    params: 'url(a.png), url(b.png), 50%'
+  }
+};
+
+
+functions['repeating-linear-gradient'] =
+functions['repeating-radial-gradient'] =
+functions['radial-gradient'] =
+functions['linear-gradient'];
+
+// Note: The properties assigned are just to *test* support.
+// The keywords will be prefixed everywhere.
+var keywords = {
+  'initial': 'color',
+  'zoom-in': 'cursor',
+  'zoom-out': 'cursor',
+  'box': 'display',
+  'flexbox': 'display',
+  'inline-flexbox': 'display',
+  'flex': 'display',
+  'inline-flex': 'display',
+  'grid': 'display',
+  'inline-grid': 'display',
+  'min-content': 'width'
+};
+
+self.functions = [];
+self.keywords = [];
+
+var style = document.createElement('div').style;
+
+function supported(value, property) {
+  style[property] = '';
+  style[property] = value;
+
+  return !!style[property];
+}
+
+for (var func in functions) {
+  var test = functions[func],
+    property = test.property,
+    value = func + '(' + test.params + ')';
+
+  if (!supported(value, property)
+    && supported(self.prefix + value, property)) {
+    // It's supported, but with a prefix
+    self.functions.push(func);
+  }
+}
+
+for (var keyword in keywords) {
+  var property = keywords[keyword];
+
+  if (!supported(keyword, property)
+    && supported(self.prefix + keyword, property)) {
+    // It's supported, but with a prefix
+    self.keywords.push(keyword);
+  }
+}
+
+})();
+
+/**************************************
+ * Selectors and @-rules
+ **************************************/
+(function() {
+
+var
+selectors = {
+  ':read-only': null,
+  ':read-write': null,
+  ':any-link': null,
+  '::selection': null
+},
+
+atrules = {
+  'keyframes': 'name',
+  'viewport': null,
+  'document': 'regexp(".")'
+};
+
+self.selectors = [];
+self.atrules = [];
+
+var style = root.appendChild(document.createElement('style'));
+
+function supported(selector) {
+  style.textContent = selector + '{}';  // Safari 4 has issues with style.innerHTML
+
+  return !!style.sheet.cssRules.length;
+}
+
+for(var selector in selectors) {
+  var test = selector + (selectors[selector]? '(' + selectors[selector] + ')' : '');
+
+  if(!supported(test) && supported(self.prefixSelector(test))) {
+    self.selectors.push(selector);
+  }
+}
+
+for(var atrule in atrules) {
+  var test = atrule + ' ' + (atrules[atrule] || '');
+
+  if(!supported('@' + test) && supported('@' + self.prefix + test)) {
+    self.atrules.push(atrule);
+  }
+}
+
+root.removeChild(style);
+
+})();
+
+// Properties that accept properties as their value
+self.valueProperties = [
+  'transition',
+  'transition-property'
+]
+
+// Add class for current prefix
+root.className += ' ' + self.prefix;
+
+StyleFix.register(self.prefixCSS);
+
+
+})(document.documentElement);
+  </script>
+
+</head>
+
+<body>
+
+<h1>爱你，么么哒</h1>
+  <div class="container">
+		<div id="carousel">
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24oXIVuqZcSqgV9cdw029V6Co9AmW6jnChelJDm9oA5RApYReBtLFq6lcP2iYDNamiw!!/mnull&bo=OASgBTgEoAUBCS4!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24sz1KIQZJajzt0EFxdmmrVO3*6tIun6Fo.s6az3NdTtssoy7qNb69K2HuwAHUvh97A!!/mnull&bo=gAJVAwAAAAABB*Q!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24vR6uwfIZTHurP2c8YTQNNVXIQy6d6vYRFV3I9TDqln1atJO3lrq.xsJG9FyE.hGQg!!/mnull&bo=gAJVAwAAAAABB*Q!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24rFpSYXjoYkitd9ed*CWKmh1hghUPK4ZgjUdWluWIztg09tHLG6Otz8WjG5jm27lbQ!!/mnull&bo=gAJVAwAAAAABB*Q!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24sb2h0GjQncsbWUhafX0lPezFhT7wzH9wIyEk477bDDhBPdfd0Pdwi37Xer*664MAA!!/mnull&bo=tAC0ALQAtAABCS4!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24gAfBUosQdzVhW3r6ZMbsTLAOxkkzWZF4ooZNwNd72NSykhHItE*FWpZKvXSBfrR8g!!/mnull&bo=OAQwBTgEMAUBCS4!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24hM9qIurNk.fBvsqOKAOO6KsX3MHVC.U8HvAThSwWpZKTHnnaAoMk4SSx3MffThn1Q!!/mnull&bo=OASgBTgEoAUBCS4!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24puVTxMl.PpBNn9KDUH*fpq.tfnNomto2J4*V*51f9ga0GGV5ie8wtpGD*9moZ.kBw!!/mnull&bo=OASgBTgEoAUBCS4!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24mparck5znWQQf1OwdIj.uyQtewnJO4uFUQVcR*AVSyKTQz6T*vkTLOjD.Ow5kkC6A!!/mnull&bo=OASgBTgEoAUBCS4!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24oXIVuqZcSqgV9cdw029V6Co9AmW6jnChelJDm9oA5RApYReBtLFq6lcP2iYDNamiw!!/mnull&bo=OASgBTgEoAUBCS4!&rf=photolist&t=5"></figure>
+			<figure><img src="http://m.qpic.cn/psc?/V14H9eD71c4d6D/A5hOE6*rc9U8eSRlr1H24o2HGxPCI8rnN7Wq3psRXgZlnYsX132VkFWY.rNkiq6mL9cilmW1kyu1jOq5hdFCDQ!!/mnull&bo=OASgBTgEoAUBCS4!&rf=photolist&t=5"></figure>
+		</div>
+	</div>
+	
+</body>
+
+</html>
